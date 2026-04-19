@@ -1,0 +1,189 @@
+import { Metadata } from "next";
+import { notFound } from "next/navigation";
+import Link from "next/link";
+import { MDXRemote } from "next-mdx-remote/rsc";
+import { getArticleBySlug, getAllSlugs, getAllArticles } from "@/lib/articles";
+import { Breadcrumbs } from "@/components/Breadcrumbs";
+import { AuthorBlock } from "@/components/AuthorBlock";
+import { ArticleCard } from "@/components/ArticleCard";
+import { CTABlock } from "@/components/CTABlock";
+
+interface PageProps {
+  params: Promise<{ slug: string }>;
+}
+
+export async function generateStaticParams() {
+  return getAllSlugs().map((slug) => ({ slug }));
+}
+
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { slug } = await params;
+  const article = getArticleBySlug(slug);
+  if (!article) return {};
+
+  return {
+    title: article.title,
+    description: article.description,
+    keywords: article.keywords,
+  };
+}
+
+function extractHeadings(content: string) {
+  const regex = /^## (.+)$/gm;
+  const headings: { id: string; text: string }[] = [];
+  let match;
+  while ((match = regex.exec(content)) !== null) {
+    const text = match[1].trim();
+    const id = text
+      .toLowerCase()
+      .replace(/[^a-zа-яё0-9\s-]/gi, "")
+      .replace(/\s+/g, "-");
+    headings.push({ id, text });
+  }
+  return headings;
+}
+
+function TableOfContents({ headings }: { headings: { id: string; text: string }[] }) {
+  if (headings.length === 0) return null;
+
+  return (
+    <nav className="hidden lg:block sticky top-24 w-64 shrink-0 self-start">
+      <div className="text-xs font-medium text-[var(--color-muted)] uppercase tracking-wider mb-3">
+        Содержание
+      </div>
+      <ul className="space-y-2 border-l border-[var(--color-light-gray)]">
+        {headings.map((h) => (
+          <li key={h.id}>
+            <a
+              href={`#${h.id}`}
+              className="block pl-4 text-sm text-[var(--color-muted)] hover:text-[var(--color-dark)] transition-colors leading-snug"
+            >
+              {h.text}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+  );
+}
+
+function RelatedArticles({ slugs }: { slugs: string[] }) {
+  const allArticles = getAllArticles();
+  const related = slugs
+    .map((s) => allArticles.find((a) => a.slug === s))
+    .filter(Boolean)
+    .slice(0, 3);
+
+  if (related.length === 0) return null;
+
+  return (
+    <div className="mt-12">
+      <h2 className="text-xl font-light text-[var(--color-dark)] mb-6">
+        Читайте также
+      </h2>
+      <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        {related.map((article) => (
+          <ArticleCard key={article!.slug} article={article!} />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function ArticleJsonLd({ title, description, slug }: { title: string; description: string; slug: string }) {
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: title,
+    description,
+    author: {
+      "@type": "Organization",
+      name: "Типография Сити Принт",
+    },
+    publisher: {
+      "@type": "Organization",
+      name: "Типография Сити Принт",
+    },
+    mainEntityOfPage: {
+      "@type": "WebPage",
+      "@id": `https://citiprint.ru/baza-znaniy/${slug}`,
+    },
+  };
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+    />
+  );
+}
+
+const mdxComponents = {
+  h2: (props: React.ComponentProps<"h2">) => {
+    const text = typeof props.children === "string" ? props.children : "";
+    const id = text
+      .toLowerCase()
+      .replace(/[^a-zа-яё0-9\s-]/gi, "")
+      .replace(/\s+/g, "-");
+    return <h2 id={id} {...props} />;
+  },
+};
+
+export default async function ArticlePage({ params }: PageProps) {
+  const { slug } = await params;
+  const article = getArticleBySlug(slug);
+
+  if (!article) notFound();
+
+  const headings = extractHeadings(article.content);
+
+  return (
+    <>
+      <ArticleJsonLd
+        title={article.title}
+        description={article.description}
+        slug={article.slug}
+      />
+
+      <section className="pt-24 pb-16 md:pt-32 md:pb-20">
+        <div className="max-w-7xl mx-auto px-6">
+          <Breadcrumbs
+            items={[
+              { label: "Главная", href: "/" },
+              { label: "База знаний", href: "/baza-znaniy" },
+              { label: article.title },
+            ]}
+          />
+
+          <div className="flex gap-16">
+            <article className="min-w-0 max-w-3xl">
+              <h1 className="text-3xl md:text-4xl font-light leading-tight tracking-tight text-[var(--color-dark)]">
+                {article.title}
+              </h1>
+              <div className="mt-3 flex items-center gap-4 text-sm text-[var(--color-muted)]">
+                <span>{article.readingTime} мин. чтения</span>
+                <span>{article.section}</span>
+              </div>
+
+              <div className="mt-10 prose prose-lg max-w-none prose-headings:font-light prose-headings:tracking-tight prose-a:text-[var(--color-brand)] prose-a:no-underline hover:prose-a:underline">
+                <MDXRemote
+                  source={article.content}
+                  components={mdxComponents}
+                  options={{ mdxOptions: { format: "md" } }}
+                />
+              </div>
+
+              <AuthorBlock />
+
+              <CTABlock compact />
+
+              <RelatedArticles slugs={article.related || []} />
+            </article>
+
+            <TableOfContents headings={headings} />
+          </div>
+        </div>
+      </section>
+    </>
+  );
+}
