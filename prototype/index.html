@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Сити Принт -- Типография в Екатеринбурге</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: '#c41e2a',
+            'brand-dark': '#a01822',
+            bg: '#fafaf8',
+            dark: '#1a1a1a',
+            muted: '#888888',
+            'light-gray': '#f0efed',
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+          },
+        }
+      }
+    }
+  </script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', system-ui, sans-serif; color: #1a1a1a; background: #fafaf8; }
+
+    .product-card:hover { transform: translateY(-4px); }
+    .product-card { transition: transform 0.3s ease; }
+
+    .stat-number { font-variant-numeric: tabular-nums; }
+
+    .cta-btn {
+      transition: all 0.2s ease;
+    }
+    .cta-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(196, 30, 42, 0.3);
+    }
+
+    .advantage-card {
+      transition: all 0.3s ease;
+    }
+    .advantage-card:hover {
+      background: #f0efed;
+    }
+
+    .logo-scroll {
+      animation: scroll 20s linear infinite;
+    }
+    @keyframes scroll {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="fixed top-0 left-0 right-0 z-50 bg-bg/95 backdrop-blur-sm border-b border-light-gray/60">
+    <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+      <!-- Logo -->
+      <div class="flex items-center gap-2">
+        <img src="img/logo.jpg" alt="Типография Сити Принт" class="h-10">
+      </div>
+
+      <!-- Nav -->
+      <nav class="hidden md:flex items-center gap-8">
+        <a href="#products" class="text-sm text-muted hover:text-dark transition-colors">Продукция</a>
+        <a href="#portfolio" class="text-sm text-muted hover:text-dark transition-colors">Портфолио</a>
+        <a href="#about" class="text-sm text-muted hover:text-dark transition-colors">О нас</a>
+        <a href="#contacts" class="text-sm text-muted hover:text-dark transition-colors">Контакты</a>
+      </nav>
+
+      <!-- CTA -->
+      <div class="flex items-center gap-4">
+        <a href="#" class="hidden sm:block text-sm text-muted hover:text-dark transition-colors">Личный кабинет</a>
+        <a href="#cta" class="cta-btn bg-brand text-white text-sm font-medium px-5 py-2.5 rounded-full">Заказать</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="pt-32 pb-20 md:pt-40 md:pb-28">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="max-w-3xl">
+        <h1 class="text-4xl md:text-5xl lg:text-6xl font-light leading-[1.1] tracking-tight text-dark">
+          Печатаем книги,<br>каталоги и упаковку<br>
+          <span class="text-brand font-normal">для вашего бизнеса</span>
+        </h1>
+        <p class="mt-6 text-lg md:text-xl text-muted font-light leading-relaxed max-w-xl">
+          Типография полного цикла в Екатеринбурге. Собственное производство, доставка по всей России.
+        </p>
+        <div class="mt-8 flex flex-wrap gap-4">
+          <a href="#cta" class="cta-btn bg-brand text-white text-base font-medium px-8 py-3.5 rounded-full">
+            Обсудить проект
+          </a>
+          <a href="#portfolio" class="text-base font-medium px-8 py-3.5 rounded-full border border-dark/15 text-dark hover:bg-light-gray transition-colors">
+            Портфолио
+          </a>
+        </div>
+      </div>
+
+      <!-- Stats -->
+      <div class="mt-16 md:mt-20 grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12">
+        <div>
+          <div class="stat-number text-3xl md:text-4xl font-light text-brand">20</div>
+          <div class="mt-1 text-sm text-muted">лет на рынке</div>
+        </div>
+        <div>
+          <div class="stat-number text-3xl md:text-4xl font-light text-brand">70%</div>
+          <div class="mt-1 text-sm text-muted">клиентов возвращаются</div>
+        </div>
+        <div>
+          <div class="stat-number text-3xl md:text-4xl font-light text-brand">5 000+</div>
+          <div class="mt-1 text-sm text-muted">выполненных заказов</div>
+        </div>
+        <div>
+          <div class="stat-number text-3xl md:text-4xl font-light text-brand">РФ</div>
+          <div class="mt-1 text-sm text-muted">доставка по всей России</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Products -->
+  <section id="products" class="py-20 md:py-28 bg-white">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="flex items-end justify-between mb-12 md:mb-16">
+        <div>
+          <h2 class="text-3xl md:text-4xl font-light tracking-tight">Продукция</h2>
+          <p class="mt-3 text-muted text-lg font-light">Полный цикл: от макета до доставки</p>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+        <!-- Card 1 -->
+        <a href="#" class="product-card group block bg-light-gray rounded-2xl overflow-hidden">
+          <div class="aspect-[4/3] overflow-hidden">
+            <img src="img/books.jpg" alt="Печать книг" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+          </div>
+          <div class="p-5">
+            <h3 class="font-medium text-dark group-hover:text-brand transition-colors">Печать книг</h3>
+            <p class="mt-1 text-sm text-muted">от 5 экземпляров</p>
+          </div>
+        </a>
+
+        <!-- Card 2 -->
+        <a href="#" class="product-card group block bg-light-gray rounded-2xl overflow-hidden">
+          <div class="aspect-[4/3] overflow-hidden">
+            <img src="img/catalogs.jpg" alt="Каталоги и журналы" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+          </div>
+          <div class="p-5">
+            <h3 class="font-medium text-dark group-hover:text-brand transition-colors">Каталоги и журналы</h3>
+            <p class="mt-1 text-sm text-muted">от 50 экземпляров</p>
+          </div>
+        </a>
+
+        <!-- Card 3 -->
+        <a href="#" class="product-card group block bg-light-gray rounded-2xl overflow-hidden">
+          <div class="aspect-[4/3] overflow-hidden">
+            <img src="img/flyers.jpg" alt="Листовки и флаеры" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+          </div>
+          <div class="p-5">
+            <h3 class="font-medium text-dark group-hover:text-brand transition-colors">Листовки и флаеры</h3>
+            <p class="mt-1 text-sm text-muted">от 2 дней</p>
+          </div>
+        </a>
+
+        <!-- Card 4 -->
+        <a href="#" class="product-card group block bg-light-gray rounded-2xl overflow-hidden">
+          <div class="aspect-[4/3] overflow-hidden">
+            <img src="img/cards.jpg" alt="Визитки" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+          </div>
+          <div class="p-5">
+            <h3 class="font-medium text-dark group-hover:text-brand transition-colors">Визитки</h3>
+            <p class="mt-1 text-sm text-muted">от 300 экземпляров</p>
+          </div>
+        </a>
+
+        <!-- Card 5 -->
+        <a href="#" class="product-card group block bg-light-gray rounded-2xl overflow-hidden">
+          <div class="aspect-[4/3] overflow-hidden">
+            <img src="img/calendars.jpg" alt="Календари" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+          </div>
+          <div class="p-5">
+            <h3 class="font-medium text-dark group-hover:text-brand transition-colors">Календари</h3>
+            <p class="mt-1 text-sm text-muted">от 50 экземпляров</p>
+          </div>
+        </a>
+
+        <!-- Card 6 -->
+        <a href="#" class="product-card group block bg-light-gray rounded-2xl overflow-hidden">
+          <div class="aspect-[4/3] overflow-hidden">
+            <img src="img/packaging.jpg" alt="Упаковка" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+          </div>
+          <div class="p-5">
+            <h3 class="font-medium text-dark group-hover:text-brand transition-colors">Упаковка</h3>
+            <p class="mt-1 text-sm text-muted">от 5 дней</p>
+          </div>
+        </a>
+
+        <!-- Card 7 -->
+        <a href="#" class="product-card group block bg-light-gray rounded-2xl overflow-hidden">
+          <div class="aspect-[4/3] overflow-hidden">
+            <img src="img/souvenirs.jpg" alt="Сувенирная продукция" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+          </div>
+          <div class="p-5">
+            <h3 class="font-medium text-dark group-hover:text-brand transition-colors">Сувенирная продукция</h3>
+            <p class="mt-1 text-sm text-muted">новое направление</p>
+          </div>
+        </a>
+
+        <!-- Card 8 -->
+        <a href="#" class="product-card group block bg-light-gray rounded-2xl overflow-hidden">
+          <div class="aspect-[4/3] overflow-hidden">
+            <img src="img/restoration.jpg" alt="Реставрация книг" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+          </div>
+          <div class="p-5">
+            <h3 class="font-medium text-dark group-hover:text-brand transition-colors">Реставрация книг</h3>
+            <p class="mt-1 text-sm text-muted">от 2 000 руб.</p>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Why us -->
+  <section class="py-20 md:py-28">
+    <div class="max-w-7xl mx-auto px-6">
+      <h2 class="text-3xl md:text-4xl font-light tracking-tight mb-12 md:mb-16">Почему мы</h2>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div class="advantage-card p-6 rounded-2xl">
+          <div class="w-10 h-10 rounded-full bg-brand/10 flex items-center justify-center mb-4">
+            <svg class="w-5 h-5 text-brand" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/></svg>
+          </div>
+          <h3 class="font-medium mb-2">Собственное производство</h3>
+          <p class="text-sm text-muted leading-relaxed">Полный цикл в одном месте: печать, переплёт, отделка, упаковка. Контролируем качество на каждом этапе.</p>
+        </div>
+
+        <div class="advantage-card p-6 rounded-2xl">
+          <div class="w-10 h-10 rounded-full bg-brand/10 flex items-center justify-center mb-4">
+            <svg class="w-5 h-5 text-brand" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          </div>
+          <h3 class="font-medium mb-2">Гарантия качества</h3>
+          <p class="text-sm text-muted leading-relaxed">Если что-то не так -- переделаем за свой счёт. За 20 лет не потеряли ни одного клиента из-за брака.</p>
+        </div>
+
+        <div class="advantage-card p-6 rounded-2xl">
+          <div class="w-10 h-10 rounded-full bg-brand/10 flex items-center justify-center mb-4">
+            <svg class="w-5 h-5 text-brand" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8.25 18.75a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 01-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h1.125c.621 0 1.125-.504 1.125-1.125v-1.5c0-1.036-.84-1.875-1.875-1.875h-.739a.751.751 0 01-.454-.263l-2.118-2.824A1.875 1.875 0 0013.851 10.5H9.75"/></svg>
+          </div>
+          <h3 class="font-medium mb-2">Доставка по всей России</h3>
+          <p class="text-sm text-muted leading-relaxed">Работаем с клиентами из любого региона. Отправим транспортной компанией или курьером.</p>
+        </div>
+
+        <div class="advantage-card p-6 rounded-2xl">
+          <div class="w-10 h-10 rounded-full bg-brand/10 flex items-center justify-center mb-4">
+            <svg class="w-5 h-5 text-brand" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          </div>
+          <h3 class="font-medium mb-2">20 лет опыта</h3>
+          <p class="text-sm text-muted leading-relaxed">С 2006 года. Печатали для Сбербанка, Брусники и сотен других компаний. Знаем, как сделать сложный заказ.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Portfolio -->
+  <section id="portfolio" class="py-20 md:py-28 bg-white">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="flex items-end justify-between mb-12 md:mb-16">
+        <div>
+          <h2 class="text-3xl md:text-4xl font-light tracking-tight">Примеры работ</h2>
+          <p class="mt-3 text-muted text-lg font-light">Реальные заказы наших клиентов</p>
+        </div>
+        <a href="#" class="hidden md:block text-sm font-medium text-brand hover:text-brand-dark transition-colors">
+          Все работы &rarr;
+        </a>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+        <div class="aspect-[4/3] rounded-2xl overflow-hidden">
+          <img src="img/portfolio1.jpg" alt="Пример работы" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500">
+        </div>
+        <div class="aspect-[4/3] rounded-2xl overflow-hidden">
+          <img src="img/portfolio2.jpg" alt="Пример работы" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500">
+        </div>
+        <div class="aspect-[4/3] rounded-2xl overflow-hidden">
+          <img src="img/portfolio3.jpg" alt="Пример работы" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500">
+        </div>
+      </div>
+
+      <div class="mt-8 md:hidden text-center">
+        <a href="#" class="text-sm font-medium text-brand hover:text-brand-dark transition-colors">
+          Все работы &rarr;
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Video -->
+  <section class="py-20 md:py-28 bg-dark text-white">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+        <div>
+          <h2 class="text-3xl md:text-4xl font-light tracking-tight">Типография<br>Сити Принт</h2>
+          <p class="mt-6 text-lg text-white/60 font-light leading-relaxed">
+            Собственное производство в Екатеринбурге. Офсетная и цифровая печать, переплётное производство, все виды отделки. Печатаем книги, каталоги, упаковку и сувенирную продукцию для компаний по всей России.
+          </p>
+          <a href="#about" class="inline-block mt-8 text-sm font-medium text-white/80 hover:text-white transition-colors">
+            Подробнее о компании &rarr;
+          </a>
+        </div>
+        <div class="aspect-video bg-white/10 rounded-2xl flex items-center justify-center">
+          <div class="text-center">
+            <div class="w-16 h-16 rounded-full bg-white/20 flex items-center justify-center mx-auto mb-3">
+              <svg class="w-6 h-6 text-white ml-1" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+            </div>
+            <span class="text-white/40 text-sm">Имиджевый фильм -- скоро</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Reviews + Client logos -->
+  <section class="py-20 md:py-28">
+    <div class="max-w-7xl mx-auto px-6">
+      <h2 class="text-3xl md:text-4xl font-light tracking-tight mb-12 md:mb-16">Нам доверяют</h2>
+
+      <!-- Client logos -->
+      <div class="mb-16 overflow-hidden">
+        <div class="flex items-center gap-16 logo-scroll" style="width: max-content;">
+          <div class="text-2xl font-light text-muted/40 whitespace-nowrap">Сбербанк</div>
+          <div class="text-2xl font-light text-muted/40 whitespace-nowrap">Брусника</div>
+          <div class="text-2xl font-light text-muted/40 whitespace-nowrap">ТрансУрал</div>
+          <div class="text-2xl font-light text-muted/40 whitespace-nowrap">Уралкриогаз</div>
+          <div class="text-2xl font-light text-muted/40 whitespace-nowrap">Клиент 5</div>
+          <div class="text-2xl font-light text-muted/40 whitespace-nowrap">Клиент 6</div>
+          <div class="text-2xl font-light text-muted/40 whitespace-nowrap">Сбербанк</div>
+          <div class="text-2xl font-light text-muted/40 whitespace-nowrap">Брусника</div>
+          <div class="text-2xl font-light text-muted/40 whitespace-nowrap">ТрансУрал</div>
+          <div class="text-2xl font-light text-muted/40 whitespace-nowrap">Уралкриогаз</div>
+          <div class="text-2xl font-light text-muted/40 whitespace-nowrap">Клиент 5</div>
+          <div class="text-2xl font-light text-muted/40 whitespace-nowrap">Клиент 6</div>
+        </div>
+      </div>
+
+      <!-- Reviews -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="bg-white p-8 rounded-2xl border border-light-gray">
+          <div class="flex gap-1 mb-4">
+            <span class="text-brand">&#9733;</span>
+            <span class="text-brand">&#9733;</span>
+            <span class="text-brand">&#9733;</span>
+            <span class="text-brand">&#9733;</span>
+            <span class="text-brand">&#9733;</span>
+          </div>
+          <p class="text-sm text-dark/80 leading-relaxed mb-6">
+            &laquo;Работаем с Сити Принт уже 5 лет. Качество печати книг и каталогов всегда на высоте. Сроки соблюдают, даже когда у нас горящий дедлайн.&raquo;
+          </p>
+          <div>
+            <div class="text-sm font-medium">German Ermakov</div>
+            <div class="text-xs text-muted mt-0.5">Flamp</div>
+          </div>
+        </div>
+
+        <div class="bg-white p-8 rounded-2xl border border-light-gray">
+          <div class="flex gap-1 mb-4">
+            <span class="text-brand">&#9733;</span>
+            <span class="text-brand">&#9733;</span>
+            <span class="text-brand">&#9733;</span>
+            <span class="text-brand">&#9733;</span>
+            <span class="text-brand">&#9733;</span>
+          </div>
+          <p class="text-sm text-dark/80 leading-relaxed mb-6">
+            &laquo;Заказывали корпоративные блокноты и календари. Менеджер помогла подобрать бумагу и отделку. Результат превзошёл ожидания. Рекомендую.&raquo;
+          </p>
+          <div>
+            <div class="text-sm font-medium">Ирина Ахманаева</div>
+            <div class="text-xs text-muted mt-0.5">Flamp</div>
+          </div>
+        </div>
+
+        <div class="bg-white p-8 rounded-2xl border border-light-gray">
+          <div class="flex gap-1 mb-4">
+            <span class="text-brand">&#9733;</span>
+            <span class="text-brand">&#9733;</span>
+            <span class="text-brand">&#9733;</span>
+            <span class="text-brand">&#9733;</span>
+            <span class="text-brand">&#9733;</span>
+          </div>
+          <p class="text-sm text-dark/80 leading-relaxed mb-6">
+            &laquo;Печатали партию подарочной упаковки к Новому году. Тираж 500 штук сделали за неделю. Качество картона и печати отличное.&raquo;
+          </p>
+          <div>
+            <div class="text-sm font-medium">Уралкриогаз</div>
+            <div class="text-xs text-muted mt-0.5">2GIS</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section id="cta" class="py-20 md:py-28 bg-brand">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="max-w-2xl mx-auto text-center">
+        <h2 class="text-3xl md:text-4xl font-light tracking-tight text-white">Обсудим ваш проект?</h2>
+        <p class="mt-4 text-lg text-white/70 font-light">
+          Расскажите, что нужно напечатать. Рассчитаем стоимость за 10 минут.
+        </p>
+
+        <form class="mt-10 text-left">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <input type="text" placeholder="Ваше имя" class="w-full px-5 py-3.5 rounded-xl bg-white/10 border border-white/20 text-white placeholder-white/50 text-sm focus:outline-none focus:border-white/50 transition-colors">
+            <input type="tel" placeholder="Телефон" class="w-full px-5 py-3.5 rounded-xl bg-white/10 border border-white/20 text-white placeholder-white/50 text-sm focus:outline-none focus:border-white/50 transition-colors">
+            <select class="w-full px-5 py-3.5 rounded-xl bg-white/10 border border-white/20 text-white/50 text-sm focus:outline-none focus:border-white/50 transition-colors appearance-none">
+              <option value="">Тип продукции</option>
+              <option>Книги</option>
+              <option>Каталоги и журналы</option>
+              <option>Листовки</option>
+              <option>Визитки</option>
+              <option>Календари</option>
+              <option>Упаковка</option>
+              <option>Сувенирная продукция</option>
+              <option>Другое</option>
+            </select>
+            <input type="text" placeholder="Тираж" class="w-full px-5 py-3.5 rounded-xl bg-white/10 border border-white/20 text-white placeholder-white/50 text-sm focus:outline-none focus:border-white/50 transition-colors">
+          </div>
+          <textarea placeholder="Комментарий к заказу" rows="3" class="mt-4 w-full px-5 py-3.5 rounded-xl bg-white/10 border border-white/20 text-white placeholder-white/50 text-sm focus:outline-none focus:border-white/50 transition-colors resize-none"></textarea>
+
+          <div class="mt-6 flex flex-col sm:flex-row items-center gap-4">
+            <button type="submit" class="w-full sm:w-auto bg-white text-brand font-medium px-10 py-3.5 rounded-full hover:bg-white/90 transition-colors">
+              Отправить заявку
+            </button>
+            <span class="text-white/50 text-xs">или напишите в
+              <a href="#" class="text-white/70 underline underline-offset-2">Telegram</a> /
+              <a href="#" class="text-white/70 underline underline-offset-2">WhatsApp</a>
+            </span>
+          </div>
+
+          <label class="mt-4 flex items-start gap-2 text-xs text-white/40 cursor-pointer">
+            <input type="checkbox" class="mt-0.5 accent-white" required>
+            <span>Я согласен(-на) на <a href="#" class="text-white/60 underline">обработку персональных данных</a> и принимаю <a href="#" class="text-white/60 underline">политику конфиденциальности</a></span>
+          </label>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer id="contacts" class="py-16 bg-dark text-white/70">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-12">
+        <!-- Company -->
+        <div>
+          <div class="flex items-center gap-2 mb-4">
+            <img src="img/logo.jpg" alt="Типография Сити Принт" class="h-8 brightness-0 invert">
+          </div>
+          <p class="text-sm leading-relaxed">
+            Типография полного цикла.<br>Екатеринбург, с 2006 года.
+          </p>
+        </div>
+
+        <!-- Products -->
+        <div>
+          <h4 class="text-sm font-medium text-white mb-4">Продукция</h4>
+          <ul class="space-y-2 text-sm">
+            <li><a href="#" class="hover:text-white transition-colors">Печать книг</a></li>
+            <li><a href="#" class="hover:text-white transition-colors">Каталоги и журналы</a></li>
+            <li><a href="#" class="hover:text-white transition-colors">Листовки и флаеры</a></li>
+            <li><a href="#" class="hover:text-white transition-colors">Визитки</a></li>
+            <li><a href="#" class="hover:text-white transition-colors">Календари</a></li>
+            <li><a href="#" class="hover:text-white transition-colors">Упаковка</a></li>
+            <li><a href="#" class="hover:text-white transition-colors">Сувенирная продукция</a></li>
+            <li><a href="#" class="hover:text-white transition-colors">Реставрация книг</a></li>
+          </ul>
+        </div>
+
+        <!-- Info -->
+        <div>
+          <h4 class="text-sm font-medium text-white mb-4">Информация</h4>
+          <ul class="space-y-2 text-sm">
+            <li><a href="#" class="hover:text-white transition-colors">О компании</a></li>
+            <li><a href="#" class="hover:text-white transition-colors">Портфолио</a></li>
+            <li><a href="#" class="hover:text-white transition-colors">Как заказать</a></li>
+            <li><a href="#" class="hover:text-white transition-colors">База знаний</a></li>
+            <li><a href="#" class="hover:text-white transition-colors">Техдокументация</a></li>
+          </ul>
+        </div>
+
+        <!-- Contacts -->
+        <div>
+          <h4 class="text-sm font-medium text-white mb-4">Контакты</h4>
+          <ul class="space-y-3 text-sm">
+            <li>
+              <a href="tel:+73433101337" class="text-white font-medium hover:text-brand transition-colors">+7 (343) 310-13-37</a>
+            </li>
+            <li>
+              <a href="mailto:sale@citi-print.ru" class="hover:text-white transition-colors">sale@citi-print.ru</a>
+            </li>
+            <li>Екатеринбург, Посадская 16А</li>
+            <li class="text-muted">Пн-Пт: 9:00 -- 18:00</li>
+            <li class="flex flex-wrap gap-3 pt-2">
+              <a href="#" class="hover:text-white transition-colors">Telegram</a>
+              <a href="#" class="hover:text-white transition-colors">WhatsApp</a>
+              <a href="#" class="hover:text-white transition-colors">VK</a>
+              <a href="#" class="hover:text-white transition-colors">Дзен</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="mt-12 pt-8 border-t border-white/10 text-xs text-white/30">
+        <div class="flex flex-col md:flex-row justify-between gap-4">
+          <span>2006-2026 Типография Сити Принт. Все права защищены.</span>
+          <div class="flex flex-wrap gap-4">
+            <a href="#" class="hover:text-white/50 transition-colors">Политика конфиденциальности</a>
+            <a href="#" class="hover:text-white/50 transition-colors">Согласие на обработку данных</a>
+            <a href="#" class="hover:text-white/50 transition-colors">Пользовательское соглашение</a>
+            <a href="#" class="hover:text-white/50 transition-colors">Политика cookies</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Mobile fixed bottom bar -->
+  <div class="fixed bottom-0 left-0 right-0 md:hidden bg-white/95 backdrop-blur-sm border-t border-light-gray p-3 flex gap-3 z-50">
+    <a href="tel:+73433101337" class="flex-1 text-center py-3 rounded-xl border border-dark/15 text-sm font-medium text-dark">
+      Позвонить
+    </a>
+    <a href="#" class="flex-1 text-center py-3 rounded-xl bg-brand text-white text-sm font-medium">
+      Telegram
+    </a>
+  </div>
+
+  <!-- Bottom padding for mobile fixed bar -->
+  <div class="h-20 md:h-0"></div>
+
+  <!-- Cookie banner -->
+  <div id="cookie-banner" class="fixed bottom-20 md:bottom-6 left-4 right-4 md:left-auto md:right-6 md:max-w-md z-[60] bg-white rounded-2xl shadow-2xl border border-light-gray p-5">
+    <p class="text-sm text-dark leading-relaxed">
+      Мы используем файлы cookies для улучшения работы сайта и анализа трафика. Продолжая использовать сайт, вы соглашаетесь с
+      <a href="#" class="text-brand underline underline-offset-2">политикой cookies</a>.
+    </p>
+    <div class="mt-4 flex gap-3">
+      <button onclick="document.getElementById('cookie-banner').style.display='none'" class="px-5 py-2 bg-brand text-white text-sm font-medium rounded-full hover:bg-brand-dark transition-colors">
+        Принять
+      </button>
+      <button onclick="document.getElementById('cookie-banner').style.display='none'" class="px-5 py-2 text-sm text-muted hover:text-dark transition-colors">
+        Отклонить
+      </button>
+    </div>
+  </div>
+
+</body>
+</html>
