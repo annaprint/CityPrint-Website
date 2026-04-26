@@ -1,0 +1,87 @@
+// Shared data
+// Unsplash images served via images.unsplash.com (stable URLs)
+const UNSPLASH = (id, w = 1200) => `https://images.unsplash.com/photo-${id}?auto=format&fit=crop&w=${w}&q=80`;
+
+// Well-known stable Unsplash photo IDs (print, paper, books, packaging, workshop)
+const IMG = {
+  booksStack:    UNSPLASH('1544947950-fa07a98d237f', 1100), // stack of books
+  openBook:      UNSPLASH('1532012197267-da84d127e765', 1100), // open book
+  magazine:      UNSPLASH('1589998059171-988d887df646', 1100), // magazine
+  magazines2:    UNSPLASH('1506784881475-0f0e8bfa6d3f', 1100),
+  flyers:        UNSPLASH('1513267048331-5611cad62e41', 1100), // paper stack
+  businessCards: UNSPLASH('1586953208448-b95a79798f07', 1100),
+  calendar:      UNSPLASH('1506784983877-45594efa4cbe', 1100),
+  packagingBox:  UNSPLASH('1607344645866-009c320b63e0', 1100),
+  packaging2:    UNSPLASH('1607083206968-13611e3d76db', 1100),
+  notebook:      UNSPLASH('1517842645767-c639042777db', 1100),
+  restoration:   UNSPLASH('1456513080510-7bf3a84b82f8', 1100),
+  paperSwatches: UNSPLASH('1519682337058-a94d519337bc', 1000),
+  printPress:    UNSPLASH('1455390582262-044cdead277a', 1400),
+  workshop:      UNSPLASH('1527689368864-3a821dbccc34', 1400),
+  bindery:       UNSPLASH('1519389950473-47ba0277781c', 1200),
+  inkClose:      UNSPLASH('1533279443086-d1c5a7bd8c07', 1000),
+  stickers:      UNSPLASH('1581299894007-aaa50297cf16', 1100),
+  coffee:        UNSPLASH('1587241321921-91a834d6d191', 1100),
+  heroPackaging: UNSPLASH('1607083206968-13611e3d76db', 1400),
+  teamRoom:      UNSPLASH('1497366216548-37526070297c', 1400),
+};
+
+const PRODUCTS = [
+  { id: 'books',       name: 'Печать книг',           note: 'от 5 экз.',    lead: 'Офсет и цифра',                  slug: 'books',       img: 'assets/efremov-books.jpg', url: '/pechat-knig/' },
+  { id: 'catalogs',    name: 'Каталоги и журналы',    note: 'от 50 экз.',   lead: 'Многотиражка',                   slug: 'catalogs',    img: IMG.magazine,               url: '/pechat-katalogov/' },
+  { id: 'flyers',      name: 'Листовки и флаеры',     note: 'от 2 дней',    lead: 'Цифровая печать',                slug: 'flyers',      img: IMG.flyers,                 url: '/listovki/' },
+  { id: 'cards',       name: 'Визитки',               note: 'от 300 экз.',  lead: 'С отделкой и без',               slug: 'cards',       img: IMG.businessCards,          url: '/vizitki/' },
+  { id: 'calendars',   name: 'Календари',             note: 'от 50 экз.',   lead: 'Квартальные, настенные, домики', slug: 'calendars',   img: IMG.calendar,               url: '/kalendari/' },
+  { id: 'packaging',   name: 'Упаковка',              note: 'от 5 дней',    lead: 'Картонная и премиум',            slug: 'packaging',   img: IMG.packagingBox,           url: '/upakovka/' },
+  { id: 'souvenirs',   name: 'Сувенирная продукция',  note: 'новое',        lead: 'Блокноты, ежедневники, мерч',    slug: 'souvenirs',   img: IMG.notebook,               url: '/bloknoty/' },
+  { id: 'restoration', name: 'Реставрация книг',      note: 'от 2 000 ₽',   lead: 'Ручной переплёт',                slug: 'restoration', img: IMG.restoration,            url: '/restavracija/' },
+];
+
+// Real portfolio — based on actual client list
+const PORTFOLIO = [
+  { id: 1, title: 'Альбомы художника Ефремова',   tag: 'КНИГА',        year: '2025', client: 'Алексей Ефремов',         img: 'assets/efremov-books.jpg' },
+  { id: 2, title: 'Каталоги жилых комплексов',    tag: 'КАТАЛОГ',      year: '2024', client: 'Брусника',                img: IMG.magazine },
+  { id: 3, title: 'Упаковка для десертов',        tag: 'УПАКОВКА',     year: '2025', client: 'Simple Coffee',           img: IMG.coffee },
+  { id: 4, title: 'Новогодние календари и пакеты', tag: 'НГ-ПРОДУКЦИЯ', year: '2024', client: 'Русская медная компания', img: IMG.calendar },
+  { id: 5, title: 'Амбарные книги',               tag: 'ПЕРЕПЛЁТ',     year: '2025', client: 'Газпром',                 img: IMG.restoration },
+  { id: 6, title: 'Буклеты и промо-листовки',     tag: 'РЕКЛАМА',      year: '2025', client: 'Сбербанк',                img: IMG.flyers },
+  { id: 7, title: 'Учебники и пособия',           tag: 'КНИГА',        year: '2024', client: 'УрФУ',                    img: IMG.openBook },
+  { id: 8, title: 'Ежедневники и ручки',          tag: 'СУВЕНИРЫ',     year: '2025', client: 'Event-агентства',         img: IMG.notebook },
+  { id: 9, title: 'Наклейки для кофеен',          tag: 'УПАКОВКА',     year: '2024', client: 'Simple Coffee',           img: IMG.stickers },
+];
+
+const REVIEWS = [
+  { text: 'Работаем с Сити Принт уже 5 лет. Качество печати книг и каталогов всегда на высоте. Сроки соблюдают, даже когда у нас горящий дедлайн.', author: 'Герман Ермаков', company: 'Flamp' },
+  { text: 'Заказывали корпоративные блокноты и календари. Менеджер помогла подобрать бумагу и отделку. Результат превзошёл ожидания.', author: 'Ирина Ахманаева', company: 'Брусника' },
+  { text: 'Печатали партию подарочной упаковки к Новому году. Тираж 500 штук сделали за неделю. Качество картона и печати отличное.', author: 'Денис К.', company: 'Русская медная компания' },
+];
+
+const CLIENTS = ['Сбербанк', 'Брусника', 'Simple Coffee', 'РМК', 'Газпром', 'Ефремов', 'УрФУ', 'Flamp', '2ГИС', 'УГМК'];
+
+const WHY = [
+  { num: '01', title: 'Собственное производство', desc: 'Полный цикл в одном месте: печать, переплёт, отделка, упаковка. Контролируем каждый этап.' },
+  { num: '02', title: 'Гарантия качества', desc: 'Если что-то не так — переделаем за свой счёт. За 20 лет не потеряли ни одного клиента из-за брака.' },
+  { num: '03', title: 'Доставка по всей России', desc: 'Работаем с клиентами из любого региона. Отправим транспортной компанией или курьером.' },
+  { num: '04', title: 'Двадцать лет опыта', desc: 'С 2006 года. Печатали для сотен компаний. Знаем, как сделать сложный заказ.' },
+];
+
+const TIMELINE = [
+  { year: '2006', title: 'Основание',        desc: 'Открыта первая мини-типография в Екатеринбурге. Офсет, листовки, визитки.' },
+  { year: '2011', title: 'Свой переплёт',    desc: 'Запуск собственного переплётного производства. Начинаем печатать книги и каталоги.' },
+  { year: '2017', title: 'Новый цех',        desc: 'Переезд на Посадскую 16А. Новые станки, новые возможности — тиражи до 50 000 экземпляров.' },
+  { year: '2022', title: 'Упаковка премиум', desc: 'Отдельная линия для премиум-упаковки: тиснение, ламинация, спот-лак, конгрев.' },
+  { year: '2026', title: 'Сегодня',          desc: 'Типография полного цикла. 33 сотрудника. 5 000+ заказов. Доставка по всей России.' },
+];
+
+const PRICE_BASE = {
+  books:       { base: 350,  per: 180 },
+  catalogs:    { base: 80,   per: 60 },
+  flyers:      { base: 4,    per: 2.5 },
+  cards:       { base: 3,    per: 1.8 },
+  calendars:   { base: 250,  per: 140 },
+  packaging:   { base: 45,   per: 28 },
+  souvenirs:   { base: 180,  per: 110 },
+  restoration: { base: 2500, per: 1200 },
+};
+
+Object.assign(window, { PRODUCTS, PORTFOLIO, REVIEWS, CLIENTS, WHY, TIMELINE, PRICE_BASE, IMG, UNSPLASH });

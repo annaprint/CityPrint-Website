@@ -1,0 +1,411 @@
+// Landing page block components
+// Globals: React, Placeholder, useReveal, PRODUCTS, PRICE_BASE, IMG, LANDING_DATA
+
+const { useState: useStateL } = React;
+
+// Block 1: Hero
+function LandingHero({ data, navigate }) {
+  const product = PRODUCTS.find(p => p.slug === data.slug) || PRODUCTS[0];
+  return (
+    <section className="landing-hero">
+      <div className="wrap landing-hero-grid">
+        <div>
+          <div className="eyebrow" style={{ marginBottom: 20 }}>
+            <span className="reg-mark">&#8853;</span> {data.hero.eyebrow}
+          </div>
+          <h1 className="landing-h1">{data.hero.h1}</h1>
+          <p className="landing-subtitle">{data.hero.subtitle}</p>
+          <div className="landing-markers">
+            {data.hero.markers.map((m, i) => <span key={i}>{m}</span>)}
+          </div>
+          <div className="landing-cta-row">
+            <a href="#landing-cta" className="btn primary" onClick={(e) => { e.preventDefault(); document.getElementById('landing-cta')?.scrollIntoView({behavior:'smooth'}); }}>{data.hero.cta1}</a>
+            <a href="#landing-cta" className="btn ghost" onClick={(e) => { e.preventDefault(); document.getElementById('landing-cta')?.scrollIntoView({behavior:'smooth'}); }}>{data.hero.cta2}</a>
+          </div>
+        </div>
+        <div>
+          <Placeholder src={product.img} label={product.name} style={{ aspectRatio: '4/5', borderRadius: 18 }} />
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// Block 2: Scenarios
+function LandingScenarios({ scenarios }) {
+  const ref = useReveal();
+  return (
+    <section className="landing-scenarios reveal" ref={ref}>
+      <div className="wrap">
+        <div className="eyebrow" style={{ marginBottom: 8 }}>
+          <span className="reg-mark">&#8853;</span> 01 — ЗАДАЧИ
+        </div>
+        <h2 className="landing-h2">С какими задачами приходят</h2>
+        <div className="scenario-pills">
+          {scenarios.map((s, i) => <span key={i} className="pill">{s}</span>)}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// Block 3: Product Variants
+function LandingVariants({ variants }) {
+  const ref = useReveal();
+  return (
+    <section className="landing-variants reveal" ref={ref}>
+      <div className="wrap">
+        <div className="eyebrow" style={{ marginBottom: 8 }}>
+          <span className="reg-mark">&#8853;</span> 02 — ВАРИАНТЫ
+        </div>
+        <h2 className="landing-h2">{variants.title}</h2>
+        {variants.groups.map((group, gi) => (
+          <div key={gi} className="variant-grid">
+            {group.items.map((item, ii) => (
+              <div key={ii} className="variant-card">
+                <div className="variant-label">{item.label}</div>
+                {item.name && <div className="variant-name">{item.name}</div>}
+                <div className="variant-desc">{item.desc}</div>
+              </div>
+            ))}
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+// Block 4: Why It Matters
+function LandingWhyMatters({ quote }) {
+  const ref = useReveal();
+  return (
+    <section className="landing-why-matters reveal" ref={ref}>
+      <div className="wrap">
+        <div className="eyebrow" style={{ marginBottom: 8 }}>
+          <span className="reg-mark">&#8853;</span> 03 — ВАЖНО
+        </div>
+        <div className="why-matters-content">
+          <blockquote className="why-matters-quote">{quote.text}</blockquote>
+          <p className="why-matters-body">{quote.body}</p>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// Block 5: Risk Removal (shared)
+function LandingRiskRemoval() {
+  const ref = useReveal();
+  const items = [
+    { title: 'Проверка макета', desc: 'Найдём ошибки до печати, предупредим о рисках' },
+    { title: 'Фиксированный срок', desc: 'Называем дату — держим. Если наш косяк — переделка за наш счёт' },
+    { title: 'Подбор материалов', desc: 'Подскажем бумагу и отделку под задачу и бюджет' },
+    { title: 'Контроль цвета', desc: 'Цветопроба, денситометрия, приладка на каждом тираже' },
+    { title: 'Упаковка и доставка', desc: 'Упакуем аккуратно, доставим по городу или отправим по России' },
+    { title: 'Один менеджер', desc: 'Ведёт заказ от заявки до выдачи. Не нужно объяснять задачу заново' },
+  ];
+  return (
+    <section className="landing-risk-removal reveal" ref={ref} style={{ background: '#2c2723' }}>
+      <div className="wrap">
+        <div className="eyebrow" style={{ marginBottom: 8, color: 'rgba(244,241,236,0.4)' }}>
+          <span className="reg-mark">&#8853;</span> 04 — ГАРАНТИИ
+        </div>
+        <h2 className="landing-h2" style={{ color: '#fff' }}>Что мы берём на себя</h2>
+        <div className="risk-grid">
+          {items.map((item, i) => (
+            <div key={i} className="risk-item">
+              <div className="risk-title">{item.title}</div>
+              <div className="risk-desc">{item.desc}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// Block 6: Cases
+function LandingCases({ cases, title, openLightbox }) {
+  const ref = useReveal();
+  return (
+    <section className="landing-cases reveal" ref={ref}>
+      <div className="wrap">
+        <div className="eyebrow" style={{ marginBottom: 8 }}>
+          <span className="reg-mark">&#8853;</span> 05 — КЕЙСЫ
+        </div>
+        <h2 className="landing-h2">{title || 'Примеры работ'}</h2>
+        <div className="cases-grid">
+          {cases.map((c, i) => (
+            <div key={i} className="case-card" onClick={() => openLightbox && openLightbox(i, cases.map((cc, ii) => ({ id: ii, title: cc.title, tag: cc.tag, year: '2025', client: cc.tag, img: cc.img })))}>
+              <Placeholder src={c.img} label={c.tag} style={{ aspectRatio: '16/10' }} />
+              <div className="case-body">
+                <div className="case-tag">{c.tag}</div>
+                <div className="case-title">{c.title}</div>
+                <div className="case-params">{c.params}</div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// Block 6.5: Restoration (unique to books landing)
+function LandingRestoration() {
+  const ref = useReveal();
+  return (
+    <section className="landing-restoration reveal" ref={ref} style={{ background: '#2c2723' }}>
+      <div className="wrap">
+        <div className="eyebrow" style={{ marginBottom: 8, color: 'rgba(244,241,236,0.4)' }}>
+          <span className="reg-mark">&#8853;</span> РЕСТАВРАЦИЯ
+        </div>
+        <div className="landing-restoration-grid">
+          <div>
+            <h2 className="landing-h2" style={{ color: '#f4f1ec' }}>Реставрация старинных книг</h2>
+            <p style={{ color: 'rgba(244,241,236,0.7)', fontSize: 15, lineHeight: 1.7, marginTop: 16 }}>
+              Восстанавливаем старинные, повреждённые и ветхие книги. Ручной переплёт, укрепление блока, восстановление обложки, золочение обреза. Каждая книга — индивидуальный проект.
+            </p>
+            <div className="restoration-features">
+              <div className="risk-item">
+                <div className="risk-title" style={{ color: '#f4f1ec' }}>Ручной переплёт</div>
+                <div className="risk-desc">Классические техники: шитьё на шнурах, каптал, кожаная обложка</div>
+              </div>
+              <div className="risk-item">
+                <div className="risk-title" style={{ color: '#f4f1ec' }}>Восстановление блока</div>
+                <div className="risk-desc">Укрепление страниц, вклейка утраченных листов, чистка</div>
+              </div>
+              <div className="risk-item">
+                <div className="risk-title" style={{ color: '#f4f1ec' }}>Работа с антикварными изданиями</div>
+                <div className="risk-desc">Бережная реставрация с сохранением исторической ценности</div>
+              </div>
+            </div>
+            <div style={{ marginTop: 24, fontFamily: 'var(--font-mono)', fontSize: 13, color: 'rgba(244,241,236,0.5)' }}>
+              от 2 000 ₽ / книга
+            </div>
+          </div>
+          <div>
+            <Placeholder src={IMG.restoration} label="реставрация книги" style={{ aspectRatio: '4/5', borderRadius: 18 }} />
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// Block 7: Process (shared)
+function LandingProcess() {
+  const ref = useReveal();
+  const steps = [
+    { num: '1', title: 'Заявка', desc: 'Описываете задачу или присылаете макет' },
+    { num: '2', title: 'Проверка', desc: 'Менеджер проверяет файл и уточняет параметры' },
+    { num: '3', title: 'Расчёт', desc: 'Предлагаем 2-3 варианта по бюджету' },
+    { num: '4', title: 'Печать', desc: 'Производство с контролем цвета и качества' },
+    { num: '5', title: 'Доставка', desc: 'Упаковка и отправка по городу или России' },
+  ];
+  return (
+    <section className="landing-process reveal" ref={ref}>
+      <div className="wrap">
+        <div className="eyebrow" style={{ marginBottom: 8 }}>
+          <span className="reg-mark">&#8853;</span> 06 — ПРОЦЕСС
+        </div>
+        <h2 className="landing-h2">Как проходит заказ</h2>
+        <div className="process-steps">
+          {steps.map((s, i) => (
+            <React.Fragment key={i}>
+              {i > 0 && <div className="process-connector" />}
+              <div className="process-step">
+                <div className="process-num">{s.num}</div>
+                <div className="process-title">{s.title}</div>
+                <div className="process-desc">{s.desc}</div>
+              </div>
+            </React.Fragment>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// Block 8: Price Factors + mini calculator
+function LandingPriceFactors({ factors, productId }) {
+  const ref = useReveal();
+  const [qty, setQty] = useStateL(500);
+  const base = PRICE_BASE[productId] || { base: 100, per: 50 };
+  const total = Math.round(base.base + base.per * qty);
+  const fmt = (n) => n.toLocaleString('ru-RU');
+
+  return (
+    <section className="landing-price reveal" ref={ref}>
+      <div className="wrap">
+        <div className="eyebrow" style={{ marginBottom: 8 }}>
+          <span className="reg-mark">&#8853;</span> 07 — СТОИМОСТЬ
+        </div>
+        <h2 className="landing-h2">Что влияет на цену</h2>
+        <div className="price-grid">
+          <div className="price-factors">
+            {factors.map((f, i) => (
+              <div key={i} className="price-factor-row">
+                <span className="price-factor-name">{f.name}</span>
+                <span className="price-factor-note">{f.note}</span>
+              </div>
+            ))}
+          </div>
+          <div className="price-calc">
+            <div className="price-calc-label">БЫСТРЫЙ РАСЧЁТ</div>
+            <div className="price-calc-title">Оценка стоимости</div>
+            <div className="price-calc-field">
+              <label>Тираж</label>
+              <input type="number" min="1" value={qty} onChange={(e) => setQty(Math.max(1, +e.target.value || 1))} />
+            </div>
+            <div className="price-calc-result">
+              <div className="price-calc-amount">от {fmt(total)} &#8381;</div>
+              <div className="price-calc-note">Точная цена — после проверки макета</div>
+            </div>
+            <a href="#landing-cta" className="btn primary" style={{ width: '100%', justifyContent: 'center', marginTop: 16 }} onClick={(e) => { e.preventDefault(); document.getElementById('landing-cta')?.scrollIntoView({behavior:'smooth'}); }}>Получить точный расчёт</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// Block 9: Tech Requirements
+function LandingTechReqs({ reqs }) {
+  const ref = useReveal();
+  return (
+    <section className="landing-tech reveal" ref={ref}>
+      <div className="wrap">
+        <div className="eyebrow" style={{ marginBottom: 8 }}>
+          <span className="reg-mark">&#8853;</span> 08 — МАКЕТ
+        </div>
+        <h2 className="landing-h2">Требования к макету</h2>
+        <div className="tech-cards">
+          {reqs.map((r, i) => (
+            <div key={i} className="tech-card">
+              <div className="tech-value">{r.value}</div>
+              <div className="tech-label">{r.label}</div>
+            </div>
+          ))}
+        </div>
+        <div className="tech-hint">
+          <strong>Не знаете требований?</strong> Пришлите макет как есть — мы проверим и подскажем, что нужно поправить. Бесплатно.
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// Block 10: FAQ
+function LandingFAQ({ items }) {
+  const ref = useReveal();
+  const [openIdx, setOpenIdx] = useStateL(null);
+  return (
+    <section className="landing-faq reveal" ref={ref}>
+      <div className="wrap">
+        <div className="eyebrow" style={{ marginBottom: 8 }}>
+          <span className="reg-mark">&#8853;</span> 09 — ВОПРОСЫ
+        </div>
+        <h2 className="landing-h2">Частые вопросы</h2>
+        <div className="faq-list">
+          {items.map((item, i) => (
+            <div key={i} className={`faq-item ${openIdx === i ? 'open' : ''}`} onClick={() => setOpenIdx(openIdx === i ? null : i)}>
+              <div className="faq-question">
+                <span>{item.q}</span>
+                <span className="faq-toggle">{openIdx === i ? '\u2212' : '+'}</span>
+              </div>
+              {openIdx === i && <div className="faq-answer">{item.a}</div>}
+            </div>
+          ))}
+        </div>
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          "mainEntity": items.map(item => ({
+            "@type": "Question",
+            "name": item.q,
+            "acceptedAnswer": { "@type": "Answer", "text": item.a }
+          }))
+        }) }} />
+      </div>
+    </section>
+  );
+}
+
+// Cross-links
+function LandingCrossLinks({ productIds, navigate }) {
+  const links = productIds.map(id => PRODUCTS.find(p => p.id === id)).filter(Boolean);
+  if (!links.length) return null;
+  const ref = useReveal();
+  return (
+    <section className="landing-crosslinks reveal" ref={ref}>
+      <div className="wrap">
+        <h3 className="landing-h3">Также может быть полезно</h3>
+        <div className="crosslinks-grid">
+          {links.map((p) => (
+            <a key={p.id} href="#" className="crosslink-card" onClick={(e) => { e.preventDefault(); navigate('product', p.slug); }}>
+              <Placeholder src={p.img} label={p.name} style={{ aspectRatio: '16/10' }} />
+              <div className="crosslink-body">
+                <div className="crosslink-name">{p.name}</div>
+                <div className="crosslink-note">{p.note}</div>
+              </div>
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// Block 11: CTA
+function LandingCTA({ title, text }) {
+  const [form, setForm] = useStateL({ name: '', phone: '', task: '' });
+  const [sent, setSent] = useStateL(false);
+  const update = (k, v) => setForm({ ...form, [k]: v });
+
+  if (sent) {
+    return (
+      <section className="landing-cta-section" id="landing-cta">
+        <div className="wrap" style={{ textAlign: 'center', maxWidth: 700, margin: '0 auto', padding: '80px 0' }}>
+          <h2 className="landing-h2" style={{ color: '#fff' }}>Заявка отправлена</h2>
+          <p style={{ color: 'rgba(255,255,255,0.7)', marginTop: 16 }}>Менеджер свяжется с вами в течение часа. Спасибо!</p>
+        </div>
+      </section>
+    );
+  }
+
+  return (
+    <section className="landing-cta-section" id="landing-cta">
+      <div className="wrap">
+        <div className="landing-cta-grid">
+          <div>
+            <div className="eyebrow" style={{ marginBottom: 8, color: 'rgba(255,255,255,0.4)' }}>
+              <span className="reg-mark">&#8853;</span> КОНТАКТЫ
+            </div>
+            <h2 className="landing-h2" style={{ color: '#fff' }}>{title}</h2>
+            <p className="landing-cta-text">{text}</p>
+            <div className="landing-cta-contacts">
+              <div>Telegram / WhatsApp</div>
+              <div><a href="tel:+73433101337" style={{ color: '#fff' }}>+7 (343) 310-13-37</a></div>
+              <div><a href="mailto:sale@citi-print.ru" style={{ color: '#fff' }}>sale@citi-print.ru</a></div>
+            </div>
+          </div>
+          <div className="landing-cta-form">
+            <div className="landing-cta-form-title">Быстрая заявка</div>
+            <div className="field"><input type="text" placeholder="Имя" value={form.name} onChange={(e) => update('name', e.target.value)} /></div>
+            <div className="field"><input type="tel" placeholder="Телефон" value={form.phone} onChange={(e) => update('phone', e.target.value)} /></div>
+            <div className="field"><textarea placeholder="Что нужно напечатать" value={form.task} onChange={(e) => update('task', e.target.value)} /></div>
+            <button className="btn primary" style={{ width: '100%', justifyContent: 'center' }} onClick={() => { if (form.name && form.phone) setSent(true); }} disabled={!form.name || !form.phone}>Отправить заявку</button>
+            <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)', marginTop: 8, lineHeight: 1.4 }}>Нажимая «Отправить», вы соглашаетесь с политикой конфиденциальности.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+Object.assign(window, {
+  LandingHero, LandingScenarios, LandingVariants, LandingWhyMatters,
+  LandingRiskRemoval, LandingCases, LandingProcess, LandingPriceFactors,
+  LandingTechReqs, LandingFAQ, LandingCrossLinks, LandingCTA,
+});

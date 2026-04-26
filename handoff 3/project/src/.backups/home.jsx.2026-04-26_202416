@@ -1,0 +1,439 @@
+// Home page components
+const { useState: useStateH, useEffect: useEffectH, useRef: useRefH, useMemo: useMemoH } = React;
+
+function HeroStats({ navigate }) {
+  return (
+    <section className="hero">
+      <div className="wrap hero-grid">
+        <div>
+          <div className="eyebrow" style={{ marginBottom: 28 }}>Екатеринбург · с 2006 года</div>
+          <h1 className="hero-title">
+            <WordReveal words={[
+              { text: 'Печатаем' }, { text: 'книги,' }, { text: 'каталоги' }, { text: 'и' }, { text: 'упаковку' },
+              { text: 'для', italic: true }, { text: 'вашего', italic: true }, { text: 'бизнеса.', italic: true },
+            ]} />
+          </h1>
+          <p className="hero-sub">Типография полного цикла. Собственное производство, 200+ видов бумаги, доставка по всей России.</p>
+          <div style={{ display: 'flex', gap: 12, marginTop: 32, flexWrap: 'wrap' }}>
+            <a href="#cta" className="btn primary" onClick={(e) => { e.preventDefault(); document.getElementById('cta')?.scrollIntoView({behavior: 'smooth'}); }}>Обсудить проект</a>
+            <a href="#" className="btn ghost" onClick={(e) => { e.preventDefault(); navigate('portfolio'); }}>Портфолио →</a>
+          </div>
+        </div>
+        <div>
+          <Placeholder src={IMG.printPress} label="цех · офсетная машина" style={{ aspectRatio: '4/5', borderRadius: 18 }} />
+        </div>
+      </div>
+      <div className="wrap">
+        <div className="hero-meta">
+          <div><div className="stat-num">20</div><div className="stat-lbl">лет на рынке</div></div>
+          <div><div className="stat-num">70%</div><div className="stat-lbl">клиентов возвращаются</div></div>
+          <div><div className="stat-num">5 000+</div><div className="stat-lbl">выполненных заказов</div></div>
+          <div><div className="stat-num">РФ</div><div className="stat-lbl">доставка по всей России</div></div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function HeroImage({ navigate }) {
+  return (
+    <section className="hero">
+      <div className="wrap">
+        <div className="eyebrow" style={{ marginBottom: 28 }}>Екатеринбург · с 2006 года</div>
+        <h1 className="hero-title" style={{ maxWidth: 1100 }}>
+          <WordReveal words={[
+            { text: 'Ремесло,' }, { text: 'краска' }, { text: 'и' }, { text: 'бумага' },
+            { text: 'под', italic: true }, { text: 'одной', italic: true }, { text: 'крышей.', italic: true },
+          ]} />
+        </h1>
+        <div style={{ display: 'grid', gridTemplateColumns: '1.6fr 1fr', gap: 40, marginTop: 56 }} className="hero-image-grid">
+          <Placeholder src={IMG.heroPackaging} label="упаковка premium" style={{ aspectRatio: '16/10', borderRadius: 18 }} />
+          <div>
+            <p className="hero-sub">Типография полного цикла. 200+ видов бумаги, 8 типов отделки, полный цикл от макета до доставки.</p>
+            <div style={{ display: 'flex', gap: 12, marginTop: 24, flexWrap: 'wrap' }}>
+              <a href="#cta" className="btn primary" onClick={(e) => { e.preventDefault(); document.getElementById('cta')?.scrollIntoView({behavior: 'smooth'}); }}>Обсудить проект</a>
+              <a href="#" className="btn ghost" onClick={(e) => { e.preventDefault(); navigate('portfolio'); }}>Портфолио →</a>
+            </div>
+            <div style={{ marginTop: 40, display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
+              <div><div className="stat-num">20</div><div className="stat-lbl">лет на рынке</div></div>
+              <div><div className="stat-num">5 000+</div><div className="stat-lbl">заказов</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <style>{`
+        @media (max-width: 860px) { .hero-image-grid { grid-template-columns: 1fr !important; } }
+      `}</style>
+    </section>
+  );
+}
+
+function HeroCalculator({ navigate }) {
+  const [product, setProduct] = useStateH('books');
+  const [qty, setQty] = useStateH(100);
+  const [pages, setPages] = useStateH(64);
+  const [paper, setPaper] = useStateH('standard');
+  const [finish, setFinish] = useStateH('none');
+
+  const price = useMemoH(() => {
+    const base = PRICE_BASE[product] || { base: 100, per: 50 };
+    const paperMult = paper === 'premium' ? 1.6 : paper === 'eco' ? 1.2 : 1;
+    const finishMult = finish === 'foil' ? 1.35 : finish === 'emboss' ? 1.25 : finish === 'laminate' ? 1.1 : 1;
+    const pageMult = (product === 'books' || product === 'catalogs') ? (0.5 + pages / 128) : 1;
+    const totalPerUnit = base.per * paperMult * finishMult * pageMult;
+    const setup = base.base * paperMult * finishMult;
+    const total = Math.round(setup + totalPerUnit * qty);
+    const low = Math.round(total * 0.9);
+    const high = Math.round(total * 1.15);
+    return { total, low, high };
+  }, [product, qty, pages, paper, finish]);
+
+  const showPages = product === 'books' || product === 'catalogs';
+  const fmt = (n) => n.toLocaleString('ru-RU');
+
+  return (
+    <section className="hero">
+      <div className="wrap hero-grid">
+        <div>
+          <div className="eyebrow" style={{ marginBottom: 28 }}>Расчёт за 10 секунд</div>
+          <h1 className="hero-title">
+            <WordReveal words={[
+              { text: 'Сколько' }, { text: 'стоит' },
+              { text: 'ваш', italic: true }, { text: 'тираж?', italic: true },
+            ]} />
+          </h1>
+          <p className="hero-sub">Выберите тип продукции и параметры — увидите оценку стоимости прямо сейчас. Точная цена после брифа.</p>
+          <div style={{ display: 'flex', gap: 12, marginTop: 32, flexWrap: 'wrap' }}>
+            <a href="#cta" className="btn primary" onClick={(e) => { e.preventDefault(); document.getElementById('cta')?.scrollIntoView({behavior: 'smooth'}); }}>Отправить бриф</a>
+            <a href="#" className="btn ghost" onClick={(e) => { e.preventDefault(); navigate('portfolio'); }}>Портфолио →</a>
+          </div>
+        </div>
+        <div className="calc-card">
+          <div className="eyebrow">Калькулятор</div>
+          <h3 style={{ marginTop: 6 }}>Оценка стоимости</h3>
+          <div className="calc-row" style={{ gridTemplateColumns: '1fr' }}>
+            <div className="calc-field">
+              <label>Тип продукции</label>
+              <select value={product} onChange={(e) => setProduct(e.target.value)}>
+                {PRODUCTS.map(p => <option key={p.id} value={p.id}>{p.name}</option>)}
+              </select>
+            </div>
+          </div>
+          <div className="calc-row">
+            <div className="calc-field">
+              <label>Тираж</label>
+              <input type="number" min="1" value={qty} onChange={(e) => setQty(Math.max(1, +e.target.value || 1))} />
+            </div>
+            {showPages ? (
+              <div className="calc-field">
+                <label>Страниц</label>
+                <input type="number" min="8" step="8" value={pages} onChange={(e) => setPages(Math.max(8, +e.target.value || 8))} />
+              </div>
+            ) : (
+              <div className="calc-field">
+                <label>Отделка</label>
+                <select value={finish} onChange={(e) => setFinish(e.target.value)}>
+                  <option value="none">Без отделки</option>
+                  <option value="laminate">Ламинация</option>
+                  <option value="foil">Тиснение фольгой</option>
+                  <option value="emboss">Конгрев</option>
+                </select>
+              </div>
+            )}
+          </div>
+          <div className="calc-row">
+            <div className="calc-field">
+              <label>Бумага</label>
+              <select value={paper} onChange={(e) => setPaper(e.target.value)}>
+                <option value="standard">Стандартная</option>
+                <option value="eco">Эко (переработка)</option>
+                <option value="premium">Премиум дизайнерская</option>
+              </select>
+            </div>
+            {showPages && (
+              <div className="calc-field">
+                <label>Отделка обложки</label>
+                <select value={finish} onChange={(e) => setFinish(e.target.value)}>
+                  <option value="none">Без отделки</option>
+                  <option value="laminate">Ламинация</option>
+                  <option value="foil">Тиснение фольгой</option>
+                  <option value="emboss">Конгрев</option>
+                </select>
+              </div>
+            )}
+          </div>
+          <div className="calc-total">
+            <div>
+              <div className="lbl">Оценка</div>
+              <div className="val"><span className="num">{fmt(price.total)}</span>&nbsp;₽</div>
+              <div className="range">от {fmt(price.low)} до {fmt(price.high)} ₽</div>
+            </div>
+            <a href="#cta" className="btn primary" onClick={(e) => { e.preventDefault(); document.getElementById('cta')?.scrollIntoView({behavior: 'smooth'}); }}>Оформить →</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function ProductsSection({ navigate }) {
+  const ref = useReveal();
+  return (
+    <section className="products reveal" ref={ref} id="products">
+      <div className="wrap">
+        <div className="section-head">
+          <div>
+            <div className="eyebrow" style={{ marginBottom: 14 }}>01 — Продукция</div>
+            <h2>Что печатаем</h2>
+          </div>
+          <p className="sub">Полный цикл: от макета до доставки. Восемь направлений, сотни комбинаций.</p>
+        </div>
+        <div className="products-grid">
+          {PRODUCTS.map((p) => (
+            <a key={p.id} href="#" className="product-card" onClick={(e) => { e.preventDefault(); navigate('product', p.slug); }}>
+              <Placeholder src={p.img} label={p.name} />
+              <div className="meta">
+                <h3>{p.name}</h3>
+                <p className="note">{p.note}</p>
+              </div>
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function PortfolioSection({ navigate, openLightbox }) {
+  const ref = useReveal();
+  return (
+    <section className="portfolio reveal" ref={ref} id="portfolio">
+      <div className="wrap">
+        <div className="section-head">
+          <div>
+            <div className="eyebrow" style={{ marginBottom: 14 }}>02 — Портфолио</div>
+            <h2>Реальные работы</h2>
+          </div>
+          <a href="#" className="btn ghost" onClick={(e) => { e.preventDefault(); navigate('portfolio'); }}>Все работы →</a>
+        </div>
+        <div className="portfolio-grid">
+          {PORTFOLIO.slice(0, 5).map((it, i) => (
+            <div key={it.id} className="portfolio-item" onClick={() => openLightbox(i)}>
+              <Placeholder src={it.img} label={`${it.tag} · ${it.year}`} />
+              <div className="caption">
+                <h4>{it.title}</h4>
+                <p>{it.client} · {it.year}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function WhySection() {
+  const ref = useReveal();
+  return (
+    <section className="why reveal" ref={ref}>
+      <div className="wrap">
+        <div className="section-head">
+          <div>
+            <div className="eyebrow" style={{ marginBottom: 14 }}>03 — Почему мы</div>
+            <h2>Что важно знать</h2>
+          </div>
+        </div>
+        <div className="why-list">
+          {WHY.map(w => (
+            <div key={w.num} className="why-item">
+              <div className="why-num">{w.num}</div>
+              <h3>{w.title}</h3>
+              <p>{w.desc}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function FilmSection() {
+  const ref = useReveal();
+  return (
+    <section className="material reveal" ref={ref}>
+      <div className="wrap">
+        <div className="section-head">
+          <div>
+            <div className="eyebrow" style={{ marginBottom: 14, color: 'rgba(255,255,255,0.5)' }}>04 — О компании</div>
+            <h2>Типография Сити Принт</h2>
+          </div>
+          <p className="sub">Собственное производство в Екатеринбурге. Офсетная и цифровая печать, переплётное производство, все виды отделки.</p>
+        </div>
+        <div className="material-row">
+          <div className="material-copy">
+            <p className="material-pull">Печатаем книги, каталоги, упаковку и сувенирную продукцию для компаний по всей России.</p>
+            <p>С 2006 года. Более 5 000 выполненных заказов. Полный цикл — от проверки макета до доставки тираж��. 70% клиентов возвращаются.</p>
+          </div>
+          <div className="film-placeholder" style={{ aspectRatio: '16/9', borderRadius: 18, background: 'rgba(255,255,255,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}>
+            <div style={{ textAlign: 'center' }}>
+              <div style={{ width: 64, height: 64, borderRadius: '50%', background: 'rgba(255,255,255,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 12px' }}>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="white" style={{ marginLeft: 3 }}><path d="M8 5v14l11-7z"/></svg>
+              </div>
+              <span style={{ color: 'rgba(255,255,255,0.4)', fontSize: 14 }}>Имиджевый фильм — скоро</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function ReviewsSection() {
+  const ref = useReveal();
+  return (
+    <section className="reviews reveal" ref={ref}>
+      <div className="wrap">
+        <div className="section-head">
+          <div>
+            <div className="eyebrow" style={{ marginBottom: 14 }}>05 — Отзывы</div>
+            <h2>Нам доверяют</h2>
+          </div>
+        </div>
+        <div className="reviews-grid">
+          {REVIEWS.map((r, i) => (
+            <div key={i} className="review">
+              <div className="qmark">“</div>
+              <blockquote>{r.text}</blockquote>
+              <cite><strong>{r.author}</strong><small>{r.company}</small></cite>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function CTASection() {
+  const [step, setStep] = useStateH(0);
+  const [form, setForm] = useStateH({ name: '', phone: '', product: '', qty: '', comment: '' });
+  const [sent, setSent] = useStateH(false);
+
+  const update = (k, v) => setForm({ ...form, [k]: v });
+  const canNext = () => {
+    if (step === 0) return form.product;
+    if (step === 1) return form.qty;
+    if (step === 2) return form.name && form.phone;
+    return true;
+  };
+
+  if (sent) {
+    return (
+      <section className="cta" id="cta">
+        <div className="wrap" style={{ textAlign: 'center', maxWidth: 700, margin: '0 auto' }}>
+          <h2>Заявка отправлена</h2>
+          <p className="sub" style={{ margin: '20px auto 0', maxWidth: 500 }}>Менеджер свяжется с вами в течение часа и подготовит расчёт. Спасибо!</p>
+        </div>
+      </section>
+    );
+  }
+
+  return (
+    <section className="cta" id="cta">
+      <div className="wrap cta-grid">
+        <div>
+          <div className="eyebrow" style={{ marginBottom: 20, color: 'rgba(255,255,255,0.6)' }}>06 — Контакты</div>
+          <h2>Обсудим ваш<br/>проект?</h2>
+          <p className="sub">Расскажите, что нужно напечатать. Рассчитаем стоимость за 10 минут.</p>
+          <div style={{ marginTop: 40, fontFamily: 'var(--font-mono)', fontSize: 12, color: 'rgba(255,255,255,0.6)', letterSpacing: '0.1em' }}>
+            <div style={{ marginBottom: 12 }}>ИЛИ НАПИШИТЕ В ЛЮБОЙ МЕССЕНДЖЕР:</div>
+            <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+              <a href="#" style={{ color: '#fff', textDecoration: 'underline', textUnderlineOffset: 4 }}>Telegram</a>
+              <a href="#" style={{ color: '#fff', textDecoration: 'underline', textUnderlineOffset: 4 }}>WhatsApp</a>
+              <a href="tel:+73433101337" style={{ color: '#fff', textDecoration: 'underline', textUnderlineOffset: 4 }}>+7 (343) 310-13-37</a>
+            </div>
+          </div>
+        </div>
+        <div className="cta-form">
+          <div className="step-dots">
+            {[0, 1, 2].map(i => (
+              <div key={i} className={`dot ${step === i ? 'active' : ''} ${step > i ? 'done' : ''}`} />
+            ))}
+          </div>
+          {step === 0 && (
+            <div>
+              <div className="step-title">1. Что печатаем?</div>
+              <div className="field">
+                <label>Тип продукции</label>
+                <select value={form.product} onChange={(e) => update('product', e.target.value)}>
+                  <option value="">— выберите —</option>
+                  {PRODUCTS.map(p => <option key={p.id} value={p.name}>{p.name}</option>)}
+                  <option>Другое</option>
+                </select>
+              </div>
+            </div>
+          )}
+          {step === 1 && (
+            <div>
+              <div className="step-title">2. Параметры</div>
+              <div className="row2">
+                <div className="field">
+                  <label>Тираж</label>
+                  <input type="text" placeholder="Например, 500" value={form.qty} onChange={(e) => update('qty', e.target.value)} />
+                </div>
+                <div className="field">
+                  <label>Сроки</label>
+                  <select defaultValue="">
+                    <option value="">— любые —</option>
+                    <option>Срочно (до 3 дней)</option>
+                    <option>До 1 недели</option>
+                    <option>До 2 недель</option>
+                    <option>Не срочно</option>
+                  </select>
+                </div>
+              </div>
+              <div className="field" style={{ marginTop: 14 }}>
+                <label>Комментарий</label>
+                <textarea placeholder="Бумага, отделка, особые пожелания…" value={form.comment} onChange={(e) => update('comment', e.target.value)} />
+              </div>
+            </div>
+          )}
+          {step === 2 && (
+            <div>
+              <div className="step-title">3. Куда отправить расчёт?</div>
+              <div className="field"><label>Ваше имя</label><input type="text" placeholder="Имя" value={form.name} onChange={(e) => update('name', e.target.value)} /></div>
+              <div className="field"><label>Телефон</label><input type="tel" placeholder="+7" value={form.phone} onChange={(e) => update('phone', e.target.value)} /></div>
+              <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.5)', marginTop: 8, lineHeight: 1.4 }}>
+                Нажимая «Отправить», вы соглашаетесь с политикой конфиденциальности.
+              </div>
+            </div>
+          )}
+          <div className="step-nav">
+            {step > 0 && <button className="back" onClick={() => setStep(step - 1)}>Назад</button>}
+            {step < 2 && <button className="next" onClick={() => canNext() && setStep(step + 1)} disabled={!canNext()} style={{ opacity: canNext() ? 1 : 0.5 }}>Далее →</button>}
+            {step === 2 && <button className="next" onClick={() => canNext() && setSent(true)} disabled={!canNext()} style={{ opacity: canNext() ? 1 : 0.5 }}>Отправить заявку</button>}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function HomePage({ navigate, heroVariant, openLightbox }) {
+  return (
+    <div className="page active" data-screen-label="01 Главная">
+      {heroVariant === 'stats' && <HeroStats navigate={navigate} />}
+      {heroVariant === 'image' && <HeroImage navigate={navigate} />}
+      {heroVariant === 'calc' && <HeroCalculator navigate={navigate} />}
+      <Marquee items={['Книги', 'Каталоги', 'Упаковка', 'Визитки', 'Календари', 'Сувениры', 'Журналы', 'Листовки']} />
+      <ProductsSection navigate={navigate} />
+      <PortfolioSection navigate={navigate} openLightbox={openLightbox} />
+      <WhySection />
+      <FilmSection />
+      <Clients />
+      <ReviewsSection />
+      <CTASection />
+    </div>
+  );
+}
+
+Object.assign(window, { HomePage });

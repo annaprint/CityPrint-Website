@@ -1,0 +1,330 @@
+// Shared shell components
+const { useState, useEffect, useRef, useMemo } = React;
+
+function Placeholder({ label, style, src, alt, objectPosition }) {
+  if (src) {
+    return (
+      <div className="ph has-img" style={style}>
+        <img src={src} alt={alt || label || ''} loading="lazy" style={{ objectPosition: objectPosition || 'center' }} />
+        {label && <span className="ph-label on-img">{label}</span>}
+      </div>
+    );
+  }
+  return (
+    <div className="ph" style={style}>
+      {label && <span className="ph-label">{label}</span>}
+    </div>
+  );
+}
+
+// Brand logomark — the client's actual logo image.
+function Logomark({ size = 32, color }) {
+  return (
+    <img src="assets/logo-full.jpg" alt="Сити Принт" style={{ height: size, width: 'auto', display: 'block', flexShrink: 0 }} />
+  );
+}
+
+function Wordmark({ size = 22 }) {
+  return (
+    <span style={{
+      fontFamily: 'var(--font-display)', fontSize: size, fontWeight: 600,
+      letterSpacing: '-0.02em', lineHeight: 1, whiteSpace: 'nowrap',
+    }}>
+      Сити<span style={{ color: 'var(--accent)' }}>·</span>Принт
+    </span>
+  );
+}
+
+function CalcModal({ open, onClose }) {
+  const [product, setProduct] = useState('books');
+  const [qty, setQty] = useState(100);
+  const [pages, setPages] = useState(64);
+  const [paper, setPaper] = useState('standard');
+  const [finish, setFinish] = useState('none');
+
+  const price = React.useMemo(() => {
+    const base = PRICE_BASE[product] || { base: 100, per: 50 };
+    const paperMult = paper === 'premium' ? 1.6 : paper === 'eco' ? 1.2 : 1;
+    const finishMult = finish === 'foil' ? 1.35 : finish === 'emboss' ? 1.25 : finish === 'laminate' ? 1.1 : 1;
+    const pageMult = (product === 'books' || product === 'catalogs') ? (0.5 + pages / 128) : 1;
+    const total = Math.round(base.base * paperMult * finishMult + base.per * paperMult * finishMult * pageMult * qty);
+    return { total, low: Math.round(total * 0.9), high: Math.round(total * 1.15) };
+  }, [product, qty, pages, paper, finish]);
+
+  const showPages = product === 'books' || product === 'catalogs';
+  const fmt = (n) => n.toLocaleString('ru-RU');
+
+  if (!open) return null;
+
+  return (
+    <div className="calc-modal-overlay" onClick={onClose}>
+      <div className="calc-modal" onClick={(e) => e.stopPropagation()}>
+        <div className="calc-modal-header">
+          <div>
+            <div className="eyebrow" style={{ marginBottom: 4 }}>Калькулятор</div>
+            <h3 style={{ fontSize: 20, fontWeight: 400 }}>Оценка стоимости тиража</h3>
+          </div>
+          <button className="calc-modal-close" onClick={onClose}>&times;</button>
+        </div>
+        <div className="calc-modal-body">
+          <div className="calc-field">
+            <label>Тип продукции</label>
+            <select value={product} onChange={(e) => setProduct(e.target.value)}>
+              {PRODUCTS.map(p => <option key={p.id} value={p.id}>{p.name}</option>)}
+            </select>
+          </div>
+          <div className="calc-row">
+            <div className="calc-field">
+              <label>Тираж</label>
+              <input type="number" min="1" value={qty} onChange={(e) => setQty(Math.max(1, +e.target.value || 1))} />
+            </div>
+            {showPages ? (
+              <div className="calc-field">
+                <label>Страниц</label>
+                <input type="number" min="8" step="8" value={pages} onChange={(e) => setPages(Math.max(8, +e.target.value || 8))} />
+              </div>
+            ) : (
+              <div className="calc-field">
+                <label>Отделка</label>
+                <select value={finish} onChange={(e) => setFinish(e.target.value)}>
+                  <option value="none">Без отделки</option>
+                  <option value="laminate">Ламинация</option>
+                  <option value="foil">Тиснение фольгой</option>
+                  <option value="emboss">Конгрев</option>
+                </select>
+              </div>
+            )}
+          </div>
+          <div className="calc-row">
+            <div className="calc-field">
+              <label>Бумага</label>
+              <select value={paper} onChange={(e) => setPaper(e.target.value)}>
+                <option value="standard">Стандартная</option>
+                <option value="eco">Эко (переработка)</option>
+                <option value="premium">Премиум дизайнерская</option>
+              </select>
+            </div>
+            {showPages && (
+              <div className="calc-field">
+                <label>Отделка обложки</label>
+                <select value={finish} onChange={(e) => setFinish(e.target.value)}>
+                  <option value="none">Без отделки</option>
+                  <option value="laminate">Ламинация</option>
+                  <option value="foil">Тиснение фольгой</option>
+                  <option value="emboss">Конгрев</option>
+                </select>
+              </div>
+            )}
+          </div>
+        </div>
+        <div className="calc-modal-footer">
+          <div>
+            <div style={{ fontSize: 12, color: 'var(--muted)', marginBottom: 4 }}>Оценка</div>
+            <div style={{ fontFamily: 'var(--font-display)', fontSize: 32, fontWeight: 300, color: 'var(--accent)', letterSpacing: '-0.02em' }}>{fmt(price.total)} &#8381;</div>
+            <div style={{ fontSize: 12, color: 'var(--muted)' }}>от {fmt(price.low)} до {fmt(price.high)} ₽</div>
+          </div>
+          <div style={{ fontSize: 11, color: 'var(--muted)', marginTop: 8 }}>Точная цена — после проверки макета и параметров</div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function Header({ page, navigate }) {
+  const [scrolled, setScrolled] = useState(false);
+  const [calcOpen, setCalcOpen] = useState(false);
+  useEffect(() => {
+    const on = () => setScrolled(window.scrollY > 10);
+    window.addEventListener('scroll', on); on();
+    return () => window.removeEventListener('scroll', on);
+  }, []);
+  return (
+    <React.Fragment>
+      <header className="site" style={{ boxShadow: scrolled ? '0 1px 0 rgba(0,0,0,0.03)' : 'none' }}>
+        <div className="wrap bar">
+          <a className="brand-mark" href="#" onClick={(e) => { e.preventDefault(); navigate('home'); }} style={{ alignItems: 'center', gap: 10 }}>
+            <Logomark size={44} />
+          </a>
+          <nav className="primary">
+            <a href="#" className={page === 'products' ? 'active' : ''} onClick={(e) => { e.preventDefault(); navigate('products'); }}>Продукция</a>
+            <a href="#" className={page === 'portfolio' ? 'active' : ''} onClick={(e) => { e.preventDefault(); navigate('portfolio'); }}>Портфолио</a>
+            <a href="#" className={page === 'about' ? 'active' : ''} onClick={(e) => { e.preventDefault(); navigate('about'); }}>О нас</a>
+            <a href="#cta" onClick={(e) => { if (page !== 'home') { e.preventDefault(); navigate('home'); setTimeout(() => document.getElementById('cta')?.scrollIntoView({behavior: 'smooth'}), 100); } }}>Контакты</a>
+          </nav>
+          <div className="header-cta">
+            <a href="#" className="btn-icon" title="Личный кабинет" onClick={(e) => { e.preventDefault(); }}>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            </a>
+            <a href="#" className="btn ghost" onClick={(e) => { e.preventDefault(); setCalcOpen(true); }}>Калькулятор</a>
+            <a href="#cta" className="btn primary" onClick={(e) => { e.preventDefault(); navigate('home'); setTimeout(() => document.getElementById('cta')?.scrollIntoView({behavior: 'smooth'}), 100); }}>Заказать</a>
+          </div>
+        </div>
+      </header>
+      <CalcModal open={calcOpen} onClose={() => setCalcOpen(false)} />
+    </React.Fragment>
+  );
+}
+
+function Marquee({ items }) {
+  return (
+    <div className="marquee">
+      <div className="marquee-track">
+        {[...items, ...items].map((it, i) => (
+          <React.Fragment key={i}>
+            <span className="marquee-item">{it}</span>
+            <span className="marquee-dot" />
+          </React.Fragment>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function Clients() {
+  return (
+    <div className="clients">
+      <div className="clients-track">
+        {[...CLIENTS, ...CLIENTS, ...CLIENTS].map((c, i) => <span key={i}>{c}</span>)}
+      </div>
+    </div>
+  );
+}
+
+function Footer({ navigate }) {
+  return (
+    <footer className="site">
+      <div className="wrap">
+        <div style={{ marginBottom: 28, padding: 16, background: '#fff', borderRadius: 8, display: 'inline-block' }}>
+          <Logomark size={80} />
+        </div>
+        <p className="tagline">Типография полного цикла в Екатеринбурге. Собственное производство, доставка по всей России. С 2006 года.</p>
+        <div style={{ height: 48 }} />
+        <div className="footer-grid">
+          <div>
+            <h4>Контакты</h4>
+            <ul>
+              <li><a href="tel:+73433101337" style={{ color: '#fff', fontFamily: 'var(--font-display)', fontSize: 22 }}>+7 (343) 310-13-37</a></li>
+              <li><a href="mailto:sale@citi-print.ru">sale@citi-print.ru</a></li>
+              <li>Екатеринбург, Посадская 16А</li>
+              <li style={{ color: 'rgba(255,255,255,0.4)' }}>Пн–Пт 9:00–18:00</li>
+            </ul>
+          </div>
+          <div>
+            <h4>Продукция</h4>
+            <ul>
+              {PRODUCTS.slice(0, 5).map(p => <li key={p.id}><a href="#" onClick={(e) => { e.preventDefault(); navigate('product', p.slug); }}>{p.name}</a></li>)}
+            </ul>
+          </div>
+          <div>
+            <h4>Компания</h4>
+            <ul>
+              <li><a href="#" onClick={(e) => { e.preventDefault(); navigate('about'); }}>О нас</a></li>
+              <li><a href="#" onClick={(e) => { e.preventDefault(); navigate('portfolio'); }}>Портфолио</a></li>
+              <li><a href="#">Как заказать</a></li>
+              <li><a href="#">База знаний</a></li>
+            </ul>
+          </div>
+          <div>
+            <h4>Следите</h4>
+            <ul>
+              <li><a href="#">Telegram</a></li>
+              <li><a href="#">VK</a></li>
+              <li><a href="#">Дзен</a></li>
+              <li><a href="#">Instagram</a></li>
+            </ul>
+          </div>
+        </div>
+        <div className="colophon">
+          <span>2006–2026 © Сити Принт</span>
+          <div style={{ display: 'flex', gap: 20 }}>
+            <a href="#">Политика конфиденциальности</a>
+            <a href="#">Cookies</a>
+          </div>
+        </div>
+      </div>
+    </footer>
+  );
+}
+
+function MobileCTA({ navigate }) {
+  return (
+    <div className="mobile-cta">
+      <a href="tel:+73433101337" className="ghost">Позвонить</a>
+      <a href="#" className="primary" onClick={(e) => { e.preventDefault(); navigate('home'); setTimeout(() => document.getElementById('cta')?.scrollIntoView({behavior:'smooth'}), 100); }}>Заказать</a>
+    </div>
+  );
+}
+
+// Lightbox for portfolio
+function Lightbox({ items, index, onClose, onPrev, onNext }) {
+  useEffect(() => {
+    const k = (e) => {
+      if (e.key === 'Escape') onClose();
+      if (e.key === 'ArrowLeft') onPrev();
+      if (e.key === 'ArrowRight') onNext();
+    };
+    window.addEventListener('keydown', k);
+    return () => window.removeEventListener('keydown', k);
+  }, [onClose, onPrev, onNext]);
+  if (index === null) return null;
+  const item = items[index];
+  return (
+    <div className="lightbox open" onClick={onClose}>
+      <div className="lightbox-inner" onClick={(e) => e.stopPropagation()}>
+        <button className="lightbox-close" onClick={onClose} aria-label="Закрыть">✕</button>
+        <div className="lightbox-image">
+          <Placeholder src={item.img} label={`${item.tag} · ${item.year}`} />
+        </div>
+        <div className="lightbox-caption">
+          <div>
+            <h4>{item.title}</h4>
+            <p>{item.client} · {item.year}</p>
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 12 }}>
+            <span className="lightbox-counter">{String(index + 1).padStart(2, '0')} / {String(items.length).padStart(2, '0')}</span>
+            <div className="lightbox-nav">
+              <button onClick={onPrev} aria-label="Пред.">←</button>
+              <button onClick={onNext} aria-label="След.">→</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// Reveal hook
+function useReveal() {
+  const ref = useRef(null);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) { el.classList.add('in'); io.disconnect(); } });
+    }, { threshold: 0.15 });
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+  return ref;
+}
+
+// Word-reveal for hero
+function WordReveal({ words, delay = 60 }) {
+  const ref = useRef(null);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const spans = el.querySelectorAll('span');
+    spans.forEach((s, i) => { s.style.transitionDelay = (i * delay) + 'ms'; });
+    requestAnimationFrame(() => el.classList.add('in'));
+  }, [words, delay]);
+  return (
+    <span className="word-reveal" ref={ref}>
+      {words.map((w, i) => (
+        <span key={i} className={w.italic ? 'italic' : ''}>{w.text}{i < words.length - 1 ? '\u00A0' : ''}</span>
+      ))}
+    </span>
+  );
+}
+
+Object.assign(window, { Placeholder, Header, Marquee, Clients, Footer, MobileCTA, Lightbox, useReveal, WordReveal, Logomark, Wordmark });
