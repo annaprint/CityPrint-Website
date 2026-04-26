@@ -149,6 +149,7 @@ function Header({ page, navigate }) {
             <a href="#" className={page === 'products' ? 'active' : ''} onClick={(e) => { e.preventDefault(); navigate('products'); }}>Продукция</a>
             <a href="#" className={page === 'portfolio' ? 'active' : ''} onClick={(e) => { e.preventDefault(); navigate('portfolio'); }}>Портфолио</a>
             <a href="#" className={page === 'about' ? 'active' : ''} onClick={(e) => { e.preventDefault(); navigate('about'); }}>О нас</a>
+            <a href="baza-znaniy.html">База знаний</a>
             <a href="#cta" onClick={(e) => { if (page !== 'home') { e.preventDefault(); navigate('home'); setTimeout(() => document.getElementById('cta')?.scrollIntoView({behavior: 'smooth'}), 100); } }}>Контакты</a>
           </nav>
           <div className="header-cta">
@@ -221,7 +222,7 @@ function Footer({ navigate }) {
               <li><a href="#" onClick={(e) => { e.preventDefault(); navigate('about'); }}>О нас</a></li>
               <li><a href="#" onClick={(e) => { e.preventDefault(); navigate('portfolio'); }}>Портфолио</a></li>
               <li><a href="#">Как заказать</a></li>
-              <li><a href="#">База знаний</a></li>
+              <li><a href="baza-znaniy.html">База знаний</a></li>
             </ul>
           </div>
           <div>
